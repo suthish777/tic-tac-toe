@@ -2,11 +2,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const boxes = document.querySelectorAll('.box');
     const boxTexts = document.querySelectorAll('.boxtext');
     const gameInfo = document.querySelector('.info');
+    const currentPlayerDisplay = document.getElementById('current-player');
     const resetButton = document.getElementById('reset');
+    const scoreXDisplay = document.getElementById('score-x');
+    const scoreODisplay = document.getElementById('score-o');
   
     let currentPlayer = 'X';
     let gameBoard = ['', '', '', '', '', '', '', '', ''];
     let gameActive = true;
+    let scores = { X: 0, O: 0 };
   
     const winningCombinations = [
       [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
@@ -31,6 +35,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateGameInfo(message) {
       gameInfo.textContent = message;
     }
+
+    function updateCurrentPlayerDisplay() {
+      currentPlayerDisplay.textContent = currentPlayer;
+    }
+
+    function updateScoresDisplay() {
+      scoreXDisplay.textContent = scores.X;
+      scoreODisplay.textContent = scores.O;
+    }
+  
   
     function handleClick(index) {
       if (!gameActive || gameBoard[index] !== '') {
@@ -43,12 +57,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const winner = checkWinner();
       if (winner) {
         gameActive = false;
+        scores[winner]++;
+        updateScoresDisplay();
         updateGameInfo(`${winner} wins!`);
       } else if (checkDraw()) {
         gameActive = false;
         updateGameInfo("It's a draw!");
       } else {
         currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        updateCurrentPlayerDisplay();
         updateGameInfo(`Turn for ${currentPlayer}`);
       }
     }
@@ -69,6 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
       updateGameInfo('Turn for X');
     });
   
+    updateScoresDisplay();
+    updateCurrentPlayerDisplay();
     updateGameInfo('Turn for X');
   });
   
